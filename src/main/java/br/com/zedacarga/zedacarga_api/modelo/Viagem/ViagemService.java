@@ -42,4 +42,12 @@ public class ViagemService {
         repository.save(viagem);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Viagem viagem = repository.findById(id).get();
+        viagem.setHabilitado(Boolean.FALSE);
+        viagem.setVersao(viagem.getVersao() + 1);
+        repository.save(viagem);
+    }
+
 }

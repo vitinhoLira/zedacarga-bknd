@@ -45,4 +45,12 @@ public class MotoristaService {
         repository.save(motorista);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Motorista motorista = repository.findById(id).get();
+        motorista.setHabilitado(Boolean.FALSE);
+        motorista.setVersao(motorista.getVersao() + 1);
+        repository.save(motorista);
+    }
+
 }
