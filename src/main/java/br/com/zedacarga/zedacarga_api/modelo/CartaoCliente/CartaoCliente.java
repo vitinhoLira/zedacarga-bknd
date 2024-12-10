@@ -1,4 +1,4 @@
-package br.com.zedacarga.zedacarga_api.modelo.cartaoCliente;
+package br.com.zedacarga.zedacarga_api.modelo.CartaoCliente;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;

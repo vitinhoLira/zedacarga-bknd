@@ -1,1 +1,1 @@
-package br.com.zedacarga.zedacarga_api.modelo.usuarioMotorista;
+package br.com.zedacarga.zedacarga_api.modelo.UsuarioMotorista;

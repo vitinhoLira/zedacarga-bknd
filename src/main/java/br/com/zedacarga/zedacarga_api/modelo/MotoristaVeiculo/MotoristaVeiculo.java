@@ -1,4 +1,4 @@
-package br.com.zedacarga.zedacarga_api.modelo.motoristaVeiculo;
+package br.com.zedacarga.zedacarga_api.modelo.motoristaVeiculo; 
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "MotoristaVeiculo")
+@Table(name = "motoristaVeiculo")
 @Builder
 @Getter
 @Setter

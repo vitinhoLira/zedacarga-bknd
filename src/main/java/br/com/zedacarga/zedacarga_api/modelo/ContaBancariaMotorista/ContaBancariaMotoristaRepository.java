@@ -1,1 +1,1 @@
-package br.com.zedacarga.zedacarga_api.modelo.contaBancariaMotorista;
+package br.com.zedacarga.zedacarga_api.modelo.ContaBancariaMotorista;
