@@ -1,5 +1,7 @@
 package br.com.zedacarga.zedacarga_api.modelo.viagem;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Viagem")
+@Table(name="viagem")
+@SQLRestriction("habilitado = true")
 @Builder
 @Getter
 @Setter

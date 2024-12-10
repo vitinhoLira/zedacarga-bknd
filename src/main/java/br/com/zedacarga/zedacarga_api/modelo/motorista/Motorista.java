@@ -1,6 +1,7 @@
 package br.com.zedacarga.zedacarga_api.modelo.motorista;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -9,9 +10,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "Motorista")
+@Table(name = "motorista")
+@SQLRestriction("habilitado = true")
 @Builder
 @Getter
 @Setter

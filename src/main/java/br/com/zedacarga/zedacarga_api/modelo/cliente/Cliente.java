@@ -36,6 +36,9 @@ public class Cliente extends EntidadeAuditavel {
 
     @Column
     private String email;
+
+    @Column
+    private String cpf;
     
     @Column
     private String foto;
