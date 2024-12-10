@@ -1,4 +1,4 @@
-package br.com.zedacarga.zedacarga_api.modelo.ContaBancariaMotorista;
+package br.com.zedacarga.zedacarga_api.modelo.contaBancariaMotorista;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
