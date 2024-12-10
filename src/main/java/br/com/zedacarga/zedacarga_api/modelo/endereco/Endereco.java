@@ -1,4 +1,4 @@
-package br.com.zedacarga.zedacarga_api.modelo.cliente;
+package br.com.zedacarga.zedacarga_api.modelo.endereco;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Endereco")
+@Table(name = "endereco")
 @Builder
 @Getter
 @Setter

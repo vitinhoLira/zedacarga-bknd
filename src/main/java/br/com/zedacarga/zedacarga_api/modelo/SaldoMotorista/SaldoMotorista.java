@@ -1,4 +1,4 @@
-package br.com.zedacarga.zedacarga_api.modelo.motorista;
+package br.com.zedacarga.zedacarga_api.modelo.saldoMotorista;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "SaldoMotorista")
+@Table(name = "saldoMotorista")
 @Builder
 @Getter
 @Setter

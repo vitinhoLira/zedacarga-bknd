@@ -1,4 +1,4 @@
-package br.com.zedacarga.zedacarga_api.modelo.viagem;
+package br.com.zedacarga.zedacarga_api.modelo.tipoPagamento;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "TipoPagamento")
+@Table(name = "tipoPagamento")
 @Builder
 @Getter
 @Setter
