@@ -1,12 +1,26 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: "jdbc:postgresql://127.0.0.1:5432/zedacarga"
+    username: postgres
+    password: zedacarga
     driver-class-name: org.postgresql.Driver
+    
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: 122604Fqv@
+    key-store-type: PKCS12
+    key-alias: tomcat
+
+
+        
+        
+
