@@ -1,4 +1,12 @@
-FROM openjdk:11-jre-slim
-VOLUME /tmp
-COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+version: "3"
+services:
+  db:
+    image: postgres:9.6
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: zedacarga
+      POSTGRES_DB: zedacarga
+    ports:
+      - 5435:5432
+    volumes:
+      - ./postgres-data:/bitnami/postgresql/data 

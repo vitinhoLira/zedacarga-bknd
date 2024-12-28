@@ -1,7 +1,6 @@
 package br.com.zedacarga.zedacarga_api.api.motorista;
 
 import br.com.zedacarga.zedacarga_api.modelo.motorista.Motorista;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,20 +12,33 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MotoristaRequest {
 
-    @Column
+    private Long idConta;
+
     private String nome;
 
-    @Column
     private String email;
 
-    @Column
     private String numeroTelefone;
 
-    @Column
     private String cpf;
 
-    @Column
     private String numeroCnh;
+
+    private String foto;
+
+    private String rua;
+
+    private String cidade;
+
+    private String estado;
+
+    private String numero;
+
+    private String bairro;
+
+    private String cep;
+
+    private String complemento;
     
 
     public Motorista build() {
@@ -35,7 +47,15 @@ public class MotoristaRequest {
                 .nome(nome)
                 .email(email)
                 .numeroTelefone(numeroTelefone)
-                .numeroCnh(numeroCnh)
+                .cpf(cpf)
+                .foto(foto)
+                .rua(rua)
+                .cidade(cidade)
+                .estado(estado)
+                .numero(numero)
+                .bairro(bairro)
+                .cep(cep)
+                .complemento(complemento)
                 .build();
     }
 }

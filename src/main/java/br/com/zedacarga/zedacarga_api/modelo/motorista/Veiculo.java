@@ -1,8 +1,9 @@
-package br.com.zedacarga.zedacarga_api.modelo.endereco;
+package br.com.zedacarga.zedacarga_api.modelo.motorista;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,27 +12,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "endereco")
+@Table(name = "Veiculo")
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Endereco extends EntidadeAuditavel {
+public class Veiculo extends EntidadeAuditavel {
+
+    @OneToOne
+    private Motorista motorista;
 
     @Column
-    private String rua;
+    private String placa;
 
     @Column
-    private String cidade;
+    private String modelo;
 
     @Column
-    private String estado;
+    private String renavam;
 
     @Column
-    private String numero;
+    private String cor;
 
     @Column
-    private String complemento;
+    private String fotoVeiculo;
+
+    @Column
+    private String ano;
 
 }

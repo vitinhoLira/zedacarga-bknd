@@ -28,6 +28,20 @@ public class ClienteRequest {
     private String foto;
 
     private String email;
+
+    private String rua;
+
+    private String cidade;
+
+    private String estado;
+
+    private String numero;
+
+    private String bairro;
+
+    private String cep;
+
+    private String complemento;
     
 
     public Cliente build() {
@@ -39,6 +53,12 @@ public class ClienteRequest {
                 .telefone(telefone)
                 .foto(foto)
                 .email(email)
+                .rua(rua)
+                .cidade(cidade)
+                .estado(estado)
+                .numero(numero)
+                .cep(cep)
+                .complemento(complemento)
                 .build();
     }
 }

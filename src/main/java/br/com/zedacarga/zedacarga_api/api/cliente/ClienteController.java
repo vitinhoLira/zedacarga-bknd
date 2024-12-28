@@ -1,6 +1,7 @@
 package br.com.zedacarga.zedacarga_api.api.cliente;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.zedacarga.zedacarga_api.modelo.cliente.CartaoCliente;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.Cliente;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.ClienteService;
 
@@ -30,6 +32,8 @@ public class ClienteController {
 
     @Operation(summary = "Serviço responsável por salvar um cliente no sistema.", 
     description = "Insira um cliente no sistema.")
+
+    //cliente
 
     @PostMapping
     public ResponseEntity<Cliente> save(@RequestBody ClienteRequest request) {
@@ -70,5 +74,39 @@ public class ClienteController {
         clienteService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    //CartaoCliente
+
+    @Operation(summary = "Serviço responsável por salvar um cartão no sistema.", 
+    description = "Insira um cartão no sistema.")
+
+    @PostMapping("/cartao/{clienteId}")
+    public ResponseEntity<CartaoCliente> adicionarCartaoCliente(@PathVariable("clienteId") Long clienteId, @RequestBody @Valid CartaoClienteRequest request) {
+
+        CartaoCliente cartao = clienteService.adicionarCartaoCliente(clienteId, request.build());
+        return new ResponseEntity<CartaoCliente>(cartao, HttpStatus.CREATED);
+    }
+
+
+    @Operation(summary = "Serviço responsável por editar um cartão no sistema.", 
+    description = "Edite um cartão no sistema.")
+
+    @PutMapping("/cartao/{cartaoId}")
+    public ResponseEntity<CartaoCliente> atualizarCartaoCliente(@PathVariable("enderecoId") Long cartaoId, @RequestBody CartaoClienteRequest request) {
+
+        CartaoCliente cartao = clienteService.atualizarCartaoCliente(cartaoId, request.build());
+        return new ResponseEntity<CartaoCliente>(cartao, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Serviço responsável por excluir um cartão no sistema.", 
+    description = "Delete um cartão no sistema.")
+    
+    @DeleteMapping("/cartao/{cartaoId}")
+    public ResponseEntity<Void> removerCartaoCliente(@PathVariable("cartaoId") Long cartaoId) {
+
+        clienteService.removerCartaoCliente(cartaoId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

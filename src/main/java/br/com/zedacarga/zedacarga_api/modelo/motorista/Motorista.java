@@ -4,12 +4,18 @@ import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
@@ -21,6 +27,12 @@ import org.hibernate.annotations.SQLRestriction;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Motorista extends EntidadeAuditavel {
+
+    @OneToMany(mappedBy = "motorista", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ContaBancariaMotorista> contas;
+
+    @OneToOne
+    private Veiculo veiculo;
 
     @Column
     private String nome;
@@ -36,5 +48,29 @@ public class Motorista extends EntidadeAuditavel {
 
     @Column
     private String numeroCnh;
+
+    @Column
+    private String foto;
+
+    @Column
+    private String rua;
+
+    @Column
+    private String cidade;
+
+    @Column
+    private String estado;
+
+    @Column
+    private String numero;
+
+    @Column
+    private String bairro;
+
+    @Column
+    private String cep;
+
+    @Column
+    private String complemento;
 
 }

@@ -1,8 +1,11 @@
-package br.com.zedacarga.zedacarga_api.modelo.contaBancariaMotorista;
+package br.com.zedacarga.zedacarga_api.modelo.motorista;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +21,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContaBancariaMotorista extends EntidadeAuditavel {
+
+    @JsonIgnore
+    @ManyToOne
+    private Motorista motorista;
 
     @Column
     private String numeroConta;
