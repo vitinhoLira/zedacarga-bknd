@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MotoristaRequest {
 
-    private Long idConta;
-
     private String nome;
 
     private String email;
