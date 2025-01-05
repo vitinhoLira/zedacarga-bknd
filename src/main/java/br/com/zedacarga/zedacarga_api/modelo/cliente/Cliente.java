@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.hibernate.annotations.SQLRestriction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
@@ -32,12 +35,13 @@ public class Cliente extends EntidadeAuditavel {
     @OneToMany(mappedBy = "cliente", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CartaoCliente> cartoes;
 
-    @OneToMany(mappedBy = "cliente") 
+    @OneToMany(mappedBy = "cliente")
+    @JsonIgnore // Ignora a serialização recursiva de viagens dentro de cliente
     private List<Viagem> viagens;
 
     @Column
     private String nome;
-    
+
     @Column
     private LocalDate dataNascimento;
 
@@ -49,30 +53,11 @@ public class Cliente extends EntidadeAuditavel {
 
     @Column
     private String cpf;
-    
+
     @Column
     private String foto;
 
     @Column
-    private String rua;
+    private String asaasId;
 
-    @Column
-    private String cidade;
-
-    @Column
-    private String estado;
-
-    @Column
-    private String numero;
-
-    @Column
-    private String bairro;
-
-    @Column
-    private String cep;
-
-    @Column
-    private String complemento;
-
-   }
-   
+}

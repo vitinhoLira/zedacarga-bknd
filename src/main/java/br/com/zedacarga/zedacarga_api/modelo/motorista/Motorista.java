@@ -1,5 +1,6 @@
 package br.com.zedacarga.zedacarga_api.modelo.motorista;
 
+import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 
 import jakarta.persistence.Column;
@@ -18,6 +19,8 @@ import java.util.List;
 
 import org.hibernate.annotations.SQLRestriction;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "motorista")
 @SQLRestriction("habilitado = true")
@@ -30,6 +33,9 @@ public class Motorista extends EntidadeAuditavel {
 
     @OneToMany(mappedBy = "motorista", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ContaBancariaMotorista> contas;
+
+    @OneToMany(mappedBy = "motorista", fetch = FetchType.LAZY)
+    private List<Viagem> viagens;
 
     @OneToOne
     private Veiculo veiculo;

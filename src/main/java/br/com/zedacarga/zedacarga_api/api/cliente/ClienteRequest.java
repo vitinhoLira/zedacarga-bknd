@@ -42,6 +42,8 @@ public class ClienteRequest {
     private String cep;
 
     private String complemento;
+
+    private String asaasId;
     
 
     public Cliente build() {
@@ -53,12 +55,7 @@ public class ClienteRequest {
                 .telefone(telefone)
                 .foto(foto)
                 .email(email)
-                .rua(rua)
-                .cidade(cidade)
-                .estado(estado)
-                .numero(numero)
-                .cep(cep)
-                .complemento(complemento)
+                .asaasId(asaasId)
                 .build();
     }
 }

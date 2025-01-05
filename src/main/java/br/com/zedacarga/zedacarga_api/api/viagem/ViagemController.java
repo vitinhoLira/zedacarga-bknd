@@ -7,9 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemService;
-import br.com.zedacarga.zedacarga_api.modelo.viagem.dto.PagamentoRequest;
-import br.com.zedacarga.zedacarga_api.modelo.viagem.dto.PrecoRequest;
-import br.com.zedacarga.zedacarga_api.modelo.viagem.dto.PrecoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -21,10 +18,10 @@ public class ViagemController {
     private ViagemService viagemService;
 
     @Operation(summary = "Serviço responsável por inserir uma viagem no sistema.", 
-               description = "Insira uma viagem no sistema.")
-    @PostMapping
-    public ResponseEntity<Viagem> save(@RequestBody ViagemRequest request) {
-        Viagem viagem = viagemService.save(request.build());
+               description = "Insira uma viagem no sistema adicionando o ID do cliente e do motorista.")
+    @PostMapping("/{clienteId}/{cartaoClienteId}")
+    public ResponseEntity<Viagem> save(@RequestBody ViagemRequest request, Long clienteId, Long motoristaId, Long cartaoClienteId, Long contaMotoristaId) {
+        Viagem viagem = viagemService.save(request.build(), clienteId, cartaoClienteId);
         return new ResponseEntity<>(viagem, HttpStatus.CREATED);
     }
 
@@ -58,21 +55,4 @@ public class ViagemController {
         return ResponseEntity.ok().build();
     }
 
-    // **Novo Endpoint: Calcular Preço**
-    @Operation(summary = "Calcula o preço de uma viagem com base nas coordenadas.", 
-               description = "Recebe origem e destino e retorna o preço da viagem.")
-    @PostMapping("/calcular-preco")
-    public ResponseEntity<PrecoResponse> calcularPreco(@RequestBody PrecoRequest precoRequest) {
-        PrecoResponse response = viagemService.calcularPreco(precoRequest);
-        return ResponseEntity.ok(response);
-    }
-
-    // **Novo Endpoint: Processar Pagamento**
-    @Operation(summary = "Processa o pagamento da viagem.", 
-               description = "Recebe os dados do pagamento e realiza a cobrança.")
-    @PostMapping("/processar-pagamento")
-    public ResponseEntity<Void> processarPagamento(@RequestBody PagamentoRequest pagamentoRequest) {
-        viagemService.processarPagamento(pagamentoRequest);
-        return ResponseEntity.ok().build();
-    }
 }

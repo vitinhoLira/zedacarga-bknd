@@ -77,6 +77,23 @@ public class ClienteController {
 
     //CartaoCliente
 
+    @Operation(summary = "Serviço responsável por obter um cartão por ID.", 
+    description = "Obtenha os detalhes de um cartão com base no ID.")
+    @GetMapping("/cartao/{cartaoId}")
+    public ResponseEntity<CartaoCliente> obterCartaoPorId(@PathVariable("cartaoId") Long cartaoId) {
+
+        CartaoCliente cartao = clienteService.obterCartaoPorId(cartaoId);
+        return ResponseEntity.ok(cartao);
+    }
+
+    @Operation(summary = "Serviço responsável por listar todos os cartões de um cliente.", 
+description = "Lista todos os cartões cadastrados para um cliente específico.")
+@GetMapping("/cartoes/{clienteId}")
+public ResponseEntity<List<CartaoCliente>> listarCartoesPorCliente(@PathVariable("clienteId") Long clienteId) {
+    List<CartaoCliente> cartoes = clienteService.listarCartoesPorCliente(clienteId);
+    return ResponseEntity.ok(cartoes);
+}
+
     @Operation(summary = "Serviço responsável por salvar um cartão no sistema.", 
     description = "Insira um cartão no sistema.")
 

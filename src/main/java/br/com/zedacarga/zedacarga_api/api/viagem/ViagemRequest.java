@@ -1,7 +1,6 @@
 package br.com.zedacarga.zedacarga_api.api.viagem;
 
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,18 +11,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViagemRequest {
-
-    @Column
+    
     private String origem;
 
-    @Column
     private String destino;
 
-    @Column
     private double valor;
 
-    @Column
+    private String numeroProtocolo;
+    
     private String status;
+
+    private String dataVencimentoCobranca;
+
+    private String pgtoStatus;
 
     public Viagem build() {
         
@@ -33,6 +34,9 @@ public class ViagemRequest {
                 .destino(destino)
                 .valor(valor)
                 .status(status)
+                .numeroProtocolo(numeroProtocolo)
+                .dataVencimentoCobranca(dataVencimentoCobranca)
+                .pgtoStatus(pgtoStatus)
                 .build();
     }
 
