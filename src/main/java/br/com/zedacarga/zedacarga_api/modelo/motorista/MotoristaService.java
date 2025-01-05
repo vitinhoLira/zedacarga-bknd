@@ -72,8 +72,6 @@ public class MotoristaService {
         conta.setHabilitado(Boolean.TRUE);
         contaMotoristaRepository.save(conta);
 
-        // Depois acrescenta o endereço criado ao cliente e atualiza o cliente:
-
         List<ContaBancariaMotorista> listaContasMotorista = motorista.getContas();
 
         if (listaContasMotorista == null) {
