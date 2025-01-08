@@ -59,4 +59,10 @@ public class Cliente extends EntidadeAuditavel {
     @Column
     private String asaasId;
 
+    @Column
+    private String cep;
+
+    @Column
+    private String residenciaNumero;
+
 }

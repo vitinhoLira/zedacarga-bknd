@@ -19,8 +19,6 @@ import java.util.List;
 
 import org.hibernate.annotations.SQLRestriction;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 @Table(name = "motorista")
 @SQLRestriction("habilitado = true")

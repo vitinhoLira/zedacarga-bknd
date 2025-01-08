@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.zedacarga.zedacarga_api.modelo.cliente.Cliente;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class ClienteRequest {
     private String nome;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
-     private LocalDate dataNascimento;
+    private LocalDate dataNascimento;
 
     private String cpf;
 
@@ -29,21 +30,9 @@ public class ClienteRequest {
 
     private String email;
 
-    private String rua;
-
-    private String cidade;
-
-    private String estado;
-
-    private String numero;
-
-    private String bairro;
-
     private String cep;
 
-    private String complemento;
-
-    private String asaasId;
+    private String residenciaNumero;
     
 
     public Cliente build() {
@@ -55,7 +44,8 @@ public class ClienteRequest {
                 .telefone(telefone)
                 .foto(foto)
                 .email(email)
-                .asaasId(asaasId)
+                .cep(cep)
+                .residenciaNumero(residenciaNumero)
                 .build();
     }
 }

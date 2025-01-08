@@ -105,6 +105,8 @@ public class ClienteService {
         cliente.setEmail(clienteAlterado.getEmail());
         cliente.setCpf(clienteAlterado.getCpf());
         cliente.setFoto(clienteAlterado.getFoto());
+        cliente.setCep(clienteAlterado.getCep());
+        cliente.setResidenciaNumero(clienteAlterado.getResidenciaNumero());
 
         cliente.setVersao(cliente.getVersao() + 1);
         repository.save(cliente);

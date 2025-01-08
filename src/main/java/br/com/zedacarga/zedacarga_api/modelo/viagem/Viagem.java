@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.zedacarga.zedacarga_api.modelo.cliente.CartaoCliente;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.Cliente;
@@ -33,6 +32,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Viagem extends EntidadeAuditavel {
 
+     // Relacionamento com a Conta Bancária do Motorista
+     @OneToOne
+     @JsonIgnore // Para evitar que o relacionamento seja serializado
+     @JoinColumn(name = "pagamento_viagem_id")
+     private Pagamento pagamento;
+
     // Relacionamento com a Conta Bancária do Motorista
     @OneToOne
     @JsonIgnore // Para evitar que o relacionamento seja serializado
@@ -57,29 +62,28 @@ public class Viagem extends EntidadeAuditavel {
     private Motorista motorista;
 
     // Detalhes da Viagem
-    @Column(nullable = false)
+    @Column
     private String origem;
 
-    @Column(nullable = false)
+    @Column
     private String destino;
 
-    @Column(nullable = false)
+    @Column
     private double valor;
 
-    @Column(nullable = false)
-    private String status;
+    // Status do pagamento
+    @Column
+    private String pgtoStatus;
 
-    @Column(unique = true, nullable = false)
+    @Column
+    private String statusViagem;
+
+    @Column
     private String numeroProtocolo;
 
     // Data de Vencimento da Cobrança, com valor padrão
-    @Column(nullable = false)
     @Builder.Default
     private String dataVencimentoCobranca = LocalDate.now()
             .plusDays(1)
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-    // Status do pagamento
-    @Column(nullable = false)
-    private String pgtoStatus;
 }

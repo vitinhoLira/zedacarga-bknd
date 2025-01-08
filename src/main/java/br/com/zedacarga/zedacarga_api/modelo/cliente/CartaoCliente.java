@@ -1,5 +1,6 @@
 package br.com.zedacarga.zedacarga_api.modelo.cliente;
 
+import java.time.YearMonth;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -44,7 +45,7 @@ public class CartaoCliente extends EntidadeAuditavel {
     private String tipoCartao;
 
     @Column
-    private String dataVencimento;
+    private YearMonth dataVencimento;
 
     @Column
     private String cvv;

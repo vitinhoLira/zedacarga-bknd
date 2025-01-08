@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import br.com.zedacarga.zedacarga_api.modelo.viagem.Pagamento;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,13 +16,13 @@ import io.swagger.v3.oas.annotations.Operation;
 @CrossOrigin
 public class ViagemController {
 
-    @Autowired
+     @Autowired
     private ViagemService viagemService;
 
     @Operation(summary = "Serviço responsável por inserir uma viagem no sistema.", 
                description = "Insira uma viagem no sistema adicionando o ID do cliente e do motorista.")
     @PostMapping("/{clienteId}/{cartaoClienteId}")
-    public ResponseEntity<Viagem> save(@RequestBody ViagemRequest request, Long clienteId, Long motoristaId, Long cartaoClienteId, Long contaMotoristaId) {
+    public ResponseEntity<Viagem> save(@RequestBody ViagemRequest request, Long clienteId, Long cartaoClienteId) {
         Viagem viagem = viagemService.save(request.build(), clienteId, cartaoClienteId);
         return new ResponseEntity<>(viagem, HttpStatus.CREATED);
     }
@@ -54,5 +56,16 @@ public class ViagemController {
         viagemService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    //pagamento
+
+    @Operation(summary = "Serviço responsável por pagar uma viagem.", 
+               description = "Realize o pagamento de uma viagem adicionando o ID do cliente e do motorista.")
+    @PostMapping("/{viagemId}/pagamento")
+    public ResponseEntity<Pagamento> pagar(@RequestBody PagamentoRequest request, Long viagemId) {
+        Pagamento pagamento = viagemService.pagar(request.build(), viagemId);
+        return new ResponseEntity<>(pagamento, HttpStatus.CREATED);
+    }
+
 
 }
