@@ -1,13 +1,11 @@
 package br.com.zedacarga.zedacarga_api.modelo.motorista;
 
-import br.com.zedacarga.zedacarga_api.modelo.viagem.Pagamento;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -21,8 +19,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.SQLRestriction;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "motorista")

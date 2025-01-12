@@ -11,13 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.hibernate.annotations.SQLRestriction;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-@Table(name = "veiculo")
-@SQLRestriction("habilitado = true")
+@Table(name = "Veiculo")
 @Builder
 @Getter
 @Setter
@@ -26,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Veiculo extends EntidadeAuditavel {
 
     @OneToOne
-    @JsonIgnore
     private Motorista motorista;
 
     @Column

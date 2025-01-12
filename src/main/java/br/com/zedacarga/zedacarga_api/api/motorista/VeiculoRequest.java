@@ -1,5 +1,7 @@
 package br.com.zedacarga.zedacarga_api.api.motorista;
 
+import java.time.LocalDate;
+
 import br.com.zedacarga.zedacarga_api.modelo.motorista.Veiculo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

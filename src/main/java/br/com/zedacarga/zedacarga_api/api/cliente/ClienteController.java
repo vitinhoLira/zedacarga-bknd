@@ -109,7 +109,7 @@ public ResponseEntity<List<CartaoCliente>> listarCartoesPorCliente(@PathVariable
     description = "Edite um cartão no sistema.")
 
     @PutMapping("/cartao/{cartaoId}")
-    public ResponseEntity<CartaoCliente> atualizarCartaoCliente(@PathVariable("enderecoId") Long cartaoId, @RequestBody CartaoClienteRequest request) {
+    public ResponseEntity<CartaoCliente> atualizarCartaoCliente(@PathVariable("cartaoId") Long cartaoId, @RequestBody CartaoClienteRequest request) {
 
         CartaoCliente cartao = clienteService.atualizarCartaoCliente(cartaoId, request.build());
         return new ResponseEntity<CartaoCliente>(cartao, HttpStatus.OK);

@@ -20,6 +20,7 @@ public class ClienteRequest {
     private String nome;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
+    @Schema(example = "08/08/1996", description = "Data de nascimento.")
     private LocalDate dataNascimento;
 
     private String cpf;

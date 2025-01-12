@@ -122,6 +122,7 @@ public class ClienteService {
 
     // CartaoCliente
 
+    @Transactional
     public List<CartaoCliente> listarCartoesPorCliente(Long clienteId) {
         Cliente cliente = this.obterPorID(clienteId);
         if (cliente == null) {
@@ -130,6 +131,7 @@ public class ClienteService {
         return cliente.getCartoes();
     }
 
+    @Transactional
     public CartaoCliente obterCartaoPorId(Long id) {
         return cartaoClienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cartão com ID " + id + " não encontrado"));

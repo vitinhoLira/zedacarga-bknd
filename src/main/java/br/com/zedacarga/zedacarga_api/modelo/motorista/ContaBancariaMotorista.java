@@ -15,8 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.hibernate.annotations.SQLRestriction;
+
 @Entity
 @Table(name = "contaBancariaMotorista")
+@SQLRestriction("habilitado = true")
 @Builder
 @Getter
 @Setter
@@ -34,7 +37,13 @@ public class ContaBancariaMotorista extends EntidadeAuditavel {
     private Motorista motorista;
 
     @Column
+    private String nomeBanco;
+
+    @Column
     private String numeroConta;
+
+    @Column
+    private String digitoConta;
 
     @Column
     private String agencia;

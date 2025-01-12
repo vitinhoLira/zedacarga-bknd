@@ -31,7 +31,7 @@ import lombok.Setter;
 
 public class Cliente extends EntidadeAuditavel {
 
-    @OneToMany(mappedBy = "cliente", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cliente", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CartaoCliente> cartoes;
 
     @OneToMany(mappedBy = "cliente")

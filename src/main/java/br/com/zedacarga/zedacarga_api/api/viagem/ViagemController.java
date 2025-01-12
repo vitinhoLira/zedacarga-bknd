@@ -21,9 +21,9 @@ public class ViagemController {
 
     @Operation(summary = "Serviço responsável por inserir uma viagem no sistema.", 
                description = "Insira uma viagem no sistema adicionando o ID do cliente e do motorista.")
-    @PostMapping("/{clienteId}/{cartaoClienteId}")
-    public ResponseEntity<Viagem> save(@RequestBody ViagemRequest request, Long clienteId, Long cartaoClienteId) {
-        Viagem viagem = viagemService.save(request.build(), clienteId, cartaoClienteId);
+    @PostMapping("/cliente/{clienteId}/cartao/{cartaoClienteId}/motorista/{motoristaId}")
+    public ResponseEntity<Viagem> save(@RequestBody ViagemRequest request, Long clienteId, Long cartaoClienteId, Long motoristaId) {
+        Viagem viagem = viagemService.save(request.build(), clienteId, cartaoClienteId, motoristaId);
         return new ResponseEntity<>(viagem, HttpStatus.CREATED);
     }
 
@@ -66,6 +66,5 @@ public class ViagemController {
         Pagamento pagamento = viagemService.pagar(request.build(), viagemId);
         return new ResponseEntity<>(pagamento, HttpStatus.CREATED);
     }
-
 
 }

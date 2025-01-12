@@ -36,7 +36,7 @@ public class ViagemService {
     private MotoristaService motoristaService;
 
     @Transactional
-    public Viagem save(Viagem viagem, Long clienteId, Long cartaoClienteId, Long motoristaId) {
+    public Viagem save(Viagem viagem, Long clienteId, Long cartaoClienteId) {
         CartaoCliente cartao = clienteService.obterCartaoPorId(cartaoClienteId);
         Cliente cliente = clienteService.obterPorID(clienteId);
 
@@ -83,10 +83,9 @@ public class ViagemService {
                 com.fasterxml.jackson.databind.JsonNode responseJson = mapper.readTree(response.body().string());
                 viagem.setNumeroProtocolo(responseJson.get("id").asText());
                 viagem.setPgtoStatus(responseJson.get("status").asText());
-
             } else {
                 throw new RuntimeException(
-                        "Erro ao criar cobrança da viagem no Asaas: " + response.code() + " - " + response.body().string());
+                        "Erro ao criar cobrança da viagm no Asaas: " + response.code() + " - " + response.body().string());
             }
         } catch (Exception e) {
             throw new RuntimeException("Erro ao se comunicar com a API do Asaas", e);
@@ -118,7 +117,6 @@ public class ViagemService {
         viagem.setDestino(viagemAlterado.getDestino());
         viagem.setValor(viagemAlterado.getValor());
         viagem.setStatusViagem(viagemAlterado.getStatusViagem());
-        viagem.setViagemComprovante(viagemAlterado.getViagemComprovante());
 
         viagem.setVersao(viagem.getVersao() + 1);
         repository.save(viagem);
@@ -136,11 +134,8 @@ public class ViagemService {
 
     @Transactional
     public Pagamento pagar(Pagamento pagamento, Long viagemId) {
-
-        Motorista motorista = motoristaService.obterPorID(viagemId);
     
         Viagem viagem = obterPorID(viagemId);
-        Double valorMotorista = (80*viagem.getValor())/100;
         CartaoCliente cartao = viagem.getCartaoCliente();
         Cliente cliente = viagem.getCliente();
         
@@ -192,12 +187,7 @@ public class ViagemService {
                 // Salvando os dados do pagamento e confirmando a viagem
                 pagamento.setComprovante(responseJson.get("invoiceUrl").asText());
                 pagamento.setProtocoloId(responseJson.get("id").asText());
-                viagem.setViagemComprovante(responseJson.get("invoiceUrl").asText());
                 viagem.setPgtoStatus("Done");
-                pagamento.setViagem(viagem);
-                pagamento.setHabilitado(Boolean.TRUE);
-                pagamentoRepository.save(pagamento);
-                
             } else {
                 // Lançando exceção caso a resposta não seja bem-sucedida
                 throw new RuntimeException(
@@ -208,8 +198,7 @@ public class ViagemService {
             throw new RuntimeException("Erro ao se comunicar com a API do Asaas", e);
         }
 
-        viagem.setPagamento(pagamento);
-        repository.save(viagem);
+        pagamentoRepository.save(pagamento);
     
         return pagamento;
     }

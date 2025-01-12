@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.com.zedacarga.zedacarga_api.modelo.cliente.CartaoCliente;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.ContaBancariaMotorista;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.Motorista;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.MotoristaService;
@@ -94,10 +96,19 @@ public class MotoristaController {
     }
 
     // Veículo
+   
+     @Operation(summary = "Serviço responsável por obter um veiculo por ID.", 
+    description = "Obtenha os detalhes de um veiculo com base no ID.")
+    @GetMapping("/veiculo/{idVeiculo}")
+    public ResponseEntity<Veiculo> obterVeiculoPorID(@PathVariable("idVeiculo") Long idVeiculo) {
 
+        Veiculo veiculo = motoristaService.obterVeiculoPorID(idVeiculo);
+        return ResponseEntity.ok(veiculo);
+    }
+  
     @Operation(summary = "Serviço responsável por salvar um veículo do motorista no sistema.", 
     description = "Inclua um veículo do motorista no sistema.")
-    @PostMapping("/veiculo/{motoristaId}")
+    @PostMapping("/veiculo/motorista/{motoristaId}")
     public ResponseEntity<Veiculo> adicionarVeiculoMotorista(@PathVariable("motoristaId") Long motoristaId, @RequestBody @Valid VeiculoRequest request) {
         Veiculo veiculo = motoristaService.adicionarVeiculoMotorista(motoristaId, request.build());
         return new ResponseEntity<Veiculo>(veiculo, HttpStatus.CREATED);
@@ -118,4 +129,5 @@ public class MotoristaController {
         motoristaService.removerVeiculoMotorista(motoristaId);
         return ResponseEntity.noContent().build();
     }
+
 }

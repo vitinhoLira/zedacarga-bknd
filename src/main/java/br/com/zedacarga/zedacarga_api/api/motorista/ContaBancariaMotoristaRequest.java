@@ -15,16 +15,25 @@ import lombok.NoArgsConstructor;
 public class ContaBancariaMotoristaRequest {
 
     @Column
+    private String nomeBanco;
+
+    @Column
     private String numeroConta;
 
     @Column
+    private String digitoConta;
+
+    @Column
     private String agencia;
+
 
         public ContaBancariaMotorista build() {
      
             return ContaBancariaMotorista.builder()
                     .numeroConta(numeroConta)
                     .agencia(agencia)
+                    .digitoConta(digitoConta)
+                    .nomeBanco(nomeBanco)
                     .build();
         }
     

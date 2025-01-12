@@ -23,11 +23,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.hibernate.annotations.SQLRestriction;
-
 @Entity
 @Table(name = "viagem")
-@SQLRestriction("habilitado = true")
 @Builder
 @Getter
 @Setter
@@ -89,7 +86,4 @@ public class Viagem extends EntidadeAuditavel {
     private String dataVencimentoCobranca = LocalDate.now()
             .plusDays(1)
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    
-    @Column
-    private String viagemComprovante;
 }
