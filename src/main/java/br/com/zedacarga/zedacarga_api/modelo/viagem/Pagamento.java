@@ -34,6 +34,10 @@ public class Pagamento extends EntidadeAuditavel{
     @Column
     private String comprovante;
 
+    @Column
+    @Builder.Default
+    private String statusTransferenciaMotorista = "Ainda não houve transferência";
+
 
     
 }

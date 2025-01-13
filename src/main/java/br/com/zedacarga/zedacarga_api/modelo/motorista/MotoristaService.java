@@ -29,6 +29,9 @@ public class MotoristaService {
     @Autowired
     private VeiculoRepository veiculoRepository;
 
+    @Autowired
+    private ContaBancariaMotoristaRepository contaBancariaMotoristaRepository;
+
     @Transactional
     public Motorista save(Motorista motorista) {
 
@@ -114,6 +117,10 @@ public class MotoristaService {
     }
 
     // ContaBancariaMotorista
+
+    public ContaBancariaMotorista obterContabancariaPorID(Long id) {
+        return contaBancariaMotoristaRepository.findById(id).get();
+    }
 
     @Transactional
     public ContaBancariaMotorista adicionarContaMotorista(Long motoristaId, ContaBancariaMotorista conta) {

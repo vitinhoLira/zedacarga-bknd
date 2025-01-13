@@ -69,7 +69,16 @@ public class MotoristaController {
         return ResponseEntity.ok().build();
     }
 
-    // ContaBancariaMotorista
+    // ContaBancariaMotoristao
+   
+    @Operation(summary = "Serviço responsável por obter uma conta bancária por ID.", 
+    description = "Obtenha os detalhes de uma conta bancária com base no ID.")
+    @GetMapping("/conta/{contaId}")
+    public ResponseEntity<ContaBancariaMotorista> obterContabancariaPorID(@PathVariable("contaId") Long contaId) {
+
+        ContaBancariaMotorista conta = motoristaService.obterContabancariaPorID(contaId);
+        return ResponseEntity.ok(conta);
+    }
 
     @Operation(summary = "Serviço responsável por salvar uma conta do motorista no sistema.", 
     description = "Inclua uma conta do motorista no sistema.")
