@@ -68,21 +68,16 @@ public class ViagemController {
 
     @Operation(summary = "Serviço responsável por transferir valor para o motorista.", description = "Realize a transferência de valor para o motorista da viagem.")
     @PostMapping("/{viagemId}/conta/{contaId}/motorista/{motoristaId}/pagamento/{pagamentoId}/transferir")
-    public ResponseEntity<String> transferirValor(@PathVariable Long viagemId,
+    public ResponseEntity<Pagamento> transferirValor(
+            @PathVariable Long viagemId,
             @PathVariable Long contaId,
             @PathVariable Long motoristaId,
             @PathVariable long pagamentoId) {
-        try {
-            // Chama o método de transferência do serviço
-            viagemService.transferirValorMotorista(contaId, viagemId, motoristaId, pagamentoId);
+        // Chama o método de transferência do serviço
+        Pagamento pagamento = viagemService.transferirValorMotorista(contaId, viagemId, motoristaId, pagamentoId);
 
-            // Retorna uma resposta de sucesso
-            return ResponseEntity.ok("Transferência realizada com sucesso.");
-        } catch (Exception e) {
-            // Em caso de erro, retorna um erro com a mensagem
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao realizar a transferência: " + e.getMessage());
-        }
+        // Retorna uma resposta de sucesso com o objeto Pagamento
+        return ResponseEntity.status(HttpStatus.CREATED).body(pagamento);
 
     }
 

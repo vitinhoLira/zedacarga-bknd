@@ -8,21 +8,33 @@ import org.springframework.stereotype.Service;
 public class WebhookService {
 
     public ResponseEntity<String> processWebhook(WebhookPayload payload) {
-        // Verifique se o payload está completo
+        // 1. Verifique se as informações básicas estão todas presentes
         if (payload == null || payload.getData() == null || 
             payload.getData().getId() == null || payload.getData().getStatus() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .body("Dados de transferência incompletos.");
         }
     
-        // Se os dados estiverem corretos, continue o processamento
-        if ("TRANSFER_CREATED".equals(payload.getEvent())) {
-            // Lógica para processar a transferência
-            return ResponseEntity.ok("Transferência confirmada");
+        // 2. Verifique qual é o evento que chegou e tome a ação correta
+        switch (payload.getEvent()) {
+            case "TRANSFER_CREATED":
+                // Responda que a transferência foi criada
+                return ResponseEntity.ok("Transferência criada.");
+            case "TRANSFER_PENDING":
+                // Chame a função para confirmar a transferência pendente
+                confirmPendingTransfer(payload.getData().getId());
+                return ResponseEntity.ok("Transferência pendente confirmada.");
+            default:
+                // Qualquer outro evento não é suportado
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Evento não suportado");
         }
-    
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Evento não suportado");
     }
-    
+
+    private void confirmPendingTransfer(String transferId) {
+        // Função que confirma a transferência pendente
+        System.out.println("Confirmando transferência pendente com ID: " + transferId);
+        // Aqui você adiciona a lógica que realmente confirma a transferência
+    }
 }
+
 

@@ -1,6 +1,7 @@
 package br.com.zedacarga.zedacarga_api.api.webhook;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,29 +24,23 @@ public class WebhookController {
 
     @Operation(summary = "Serviço webhook.", description = "Recebe eventos de webhook e processa com base no tipo de evento.")
     @PostMapping("/asaas")
-    public ResponseEntity<Map<String, String>> handleAsaasWebhook(@RequestBody(required = false) WebhookPayload payload) {
-        try {
-            if (payload == null) {
-                Map<String, String> errorResponse = new HashMap<>();
-                errorResponse.put("error", "Payload não pode ser nulo.");
-                return ResponseEntity.badRequest().header("Content-Type", "application/json").body(errorResponse);
-            }
+    public ResponseEntity<Map<String, String>> handleAsaasWebhook(@RequestBody WebhookPayload payload) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
 
-            ResponseEntity<String> serviceResponse = webhookService.processWebhook(payload);
-
-            Map<String, String> response = new HashMap<>();
-            response.put("message", serviceResponse.getBody());
-
-            return ResponseEntity.status(serviceResponse.getStatusCode())
-                    .header("Content-Type", "application/json")
-                    .body(response);
-
-        } catch (Exception ex) {
+        if (payload == null) {
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Erro ao processar o webhook: " + ex.getMessage());
-            return ResponseEntity.internalServerError()
-                    .header("Content-Type", "application/json")
-                    .body(errorResponse);
+            errorResponse.put("error", "Payload não pode ser nulo.");
+            return ResponseEntity.badRequest().headers(headers).body(errorResponse);
         }
+
+        ResponseEntity<String> serviceResponse = webhookService.processWebhook(payload);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", serviceResponse.getBody());
+
+        return ResponseEntity.status(serviceResponse.getStatusCode())
+                .headers(headers)
+                .body(response);
     }
 }

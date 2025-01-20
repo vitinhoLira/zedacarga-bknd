@@ -255,6 +255,7 @@ public class ViagemService {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 // Transferência realizada com sucesso
+                pagamento.setStatusTransferenciaMotorista("Transferência realizada.");
                 return pagamento;
             } else {
                 // Erro ao transferir
