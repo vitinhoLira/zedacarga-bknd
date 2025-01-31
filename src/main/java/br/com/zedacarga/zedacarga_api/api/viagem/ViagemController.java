@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.zedacarga.zedacarga_api.modelo.motorista.MotoristaService;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Pagamento;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemService;
@@ -20,9 +19,6 @@ public class ViagemController {
 
     @Autowired
     private ViagemService viagemService;
-
-    @Autowired
-    private MotoristaService motoristaService;
 
     @Operation(summary = "Serviço responsável por inserir uma viagem no sistema.", description = "Insira uma viagem no sistema adicionando o ID do cliente e do motorista.")
     @PostMapping("/cliente/{clienteId}/cartao/{cartaoClienteId}/motorista/{motoristaId}")
