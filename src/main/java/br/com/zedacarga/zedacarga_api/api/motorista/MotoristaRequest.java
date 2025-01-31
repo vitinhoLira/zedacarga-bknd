@@ -2,8 +2,6 @@ package br.com.zedacarga.zedacarga_api.api.motorista;
 
 import java.time.LocalDate;
 
-import org.springframework.cglib.core.Local;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.zedacarga.zedacarga_api.modelo.motorista.Motorista;

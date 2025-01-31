@@ -10,6 +10,7 @@ import br.com.zedacarga.zedacarga_api.modelo.motorista.MotoristaService;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Pagamento;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemService;
+import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemStatusEnum.StatusViagem;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -56,6 +57,24 @@ public class ViagemController {
         viagemService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "Atualiza o status de uma viagem.", description = "Atualiza o status de uma viagem com base no ID da viagem, status desejado, ID do motorista e ID da conta bancária do motorista.")
+@PutMapping("/{idViagem}/status")
+public ResponseEntity<Viagem> atualizarStatusViagem(
+        @PathVariable Long idViagem,
+        @RequestParam StatusViagem statusViagem,
+        @RequestParam Long idMotorista,
+        @RequestParam Long idContaBancariaMotorista) {
+    try {
+        Viagem viagemAtualizada = viagemService.atualizarStatusViagem(idViagem, statusViagem, idMotorista, idContaBancariaMotorista);
+        return ResponseEntity.ok(viagemAtualizada);
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
+
 
     // pagamento
 

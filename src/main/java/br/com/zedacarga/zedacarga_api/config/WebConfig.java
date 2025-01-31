@@ -16,5 +16,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Permite os métodos HTTP
                 .allowedHeaders("*")
                 .allowCredentials(false);  // Permite todos os cabeçalhos
+
+        // Permite CORS para a rota do WebSocket
+        registry.addMapping("/ws/**")
+                .allowedOrigins("*"); // Permite origens de qualquer domínio para WebSocket
     }
+
 }

@@ -18,8 +18,6 @@ public class ViagemRequest {
     private String destino;
     @Schema(example = "30.0", description = "Valor da viagem.")
     private double valor;
-    @Schema(example = "pendente, andamento, concluido", description = "Valor da viagem.")
-    private String statusViagem;
 
     public Viagem build() {
         
@@ -28,7 +26,6 @@ public class ViagemRequest {
                 .origem(origem)
                 .destino(destino)
                 .valor(valor)
-                .statusViagem(statusViagem)
                 .build();
     }
 

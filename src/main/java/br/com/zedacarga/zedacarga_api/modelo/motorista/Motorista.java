@@ -22,8 +22,6 @@ import java.util.List;
 
 import org.hibernate.annotations.SQLRestriction;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "motorista")
 @SQLRestriction("habilitado = true")

@@ -10,18 +10,23 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.zedacarga.zedacarga_api.api.websocket.MotoristaWebSocket;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.CartaoCliente;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.Cliente;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.ClienteService;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.ContaBancariaMotorista;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.Motorista;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.MotoristaService;
+import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemStatusEnum.StatusViagem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +43,15 @@ public class ViagemService {
     private ClienteService clienteService;
 
     @Autowired
+    private MotoristaWebSocket motoristaWebSocket;
+
+    @Autowired
     private MotoristaService motoristaService;
 
     private static final Logger log = LoggerFactory.getLogger(ViagemService.class);
 
     @Transactional
-    public Viagem save(Viagem viagem, Long clienteId, Long cartaoClienteId, Long motoristaId) {
+    public Viagem save(Viagem viagem, Long clienteId, Long cartaoClienteId, Long idMotorista) {
         CartaoCliente cartao = clienteService.obterCartaoPorId(cartaoClienteId);
         Cliente cliente = clienteService.obterPorID(clienteId);
 
@@ -104,9 +112,31 @@ public class ViagemService {
         viagem.setVersao(1L);
         viagem.setDataCriacao(LocalDate.now());
 
-        return repository.save(viagem);
+        Viagem viagemSalva = repository.save(viagem);
+
+        // Cria um objeto JSON com os detalhes da viagem
+        Map<String, Object> mensagemJson = new HashMap<>();
+        mensagemJson.put("origem", viagem.getOrigem());
+        mensagemJson.put("destino", viagem.getDestino());
+        mensagemJson.put("valor", viagem.getValor());
+        mensagemJson.put("mensagem", "Nova solicitação de viagem");
+
+        // Converte para JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String mensagemJsonString;
+        try {
+            mensagemJsonString = objectMapper.writeValueAsString(mensagemJson);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao converter mensagem para JSON", e);
+        }
+
+        // Enviar a mensagem JSON pelo WebSocket
+        motoristaWebSocket.enviarMensagemParaMotorista(idMotorista, mensagemJsonString);
+
+        return viagemSalva;
     }
 
+    @Transactional
     public List<Viagem> listarTodos() {
         return repository.findAll();
     }
@@ -135,6 +165,61 @@ public class ViagemService {
         viagem.setVersao(viagem.getVersao() + 1);
         repository.save(viagem);
     }
+
+    @Transactional
+public Viagem atualizarStatusViagem(Long idViagem, StatusViagem statusViagem, Long idMotorista, Long idContaBancariaMotorista) {
+    Viagem viagem = this.obterPorID(idViagem);
+
+    if (viagem == null) {
+        throw new IllegalArgumentException("Viagem não encontrada com o ID: " + idViagem);
+    }
+
+    switch (statusViagem) {
+        case ACEITO:
+            return processarAceitacao(viagem, idMotorista, idContaBancariaMotorista);
+
+        case RECUSADO:
+            return processarRecusa(viagem);
+
+        default:
+            throw new IllegalArgumentException("Status inválido para essa operação.");
+    }
+}
+
+private Viagem processarAceitacao(Viagem viagem, Long idMotorista, Long idContaBancariaMotorista) {
+    Motorista motorista = motoristaService.obterPorID(idMotorista);
+    ContaBancariaMotorista conta = motoristaService.obterContabancariaPorID(idContaBancariaMotorista);
+
+    viagem.setStatusViagem(StatusViagem.ANDAMENTO);
+    viagem.setMotorista(motorista);
+    viagem.setContaBancariaMotorista(conta);
+
+    Viagem viagemAtualizada = repository.save(viagem);
+    enviarMensagemWebSocket(viagemAtualizada, viagemAtualizada.getCliente().getId());
+
+    return viagemAtualizada;
+}
+
+private Viagem processarRecusa(Viagem viagem) {
+    viagem.setStatusViagem(StatusViagem.RECUSADO);
+
+    Viagem viagemAtualizada = repository.save(viagem);
+    enviarMensagemWebSocket(viagemAtualizada, viagemAtualizada.getCliente().getId());
+
+    return viagemAtualizada;
+}
+
+private void enviarMensagemWebSocket(Viagem viagem, Long idCliente) {
+    Map<String, Object> mensagemJson = new HashMap<>();
+    mensagemJson.put("status", viagem.getStatusViagem());
+
+    try {
+        String mensagemJsonString = new ObjectMapper().writeValueAsString(mensagemJson);
+        motoristaWebSocket.enviarMensagemParaMotorista(idCliente, mensagemJsonString);
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao converter mensagem para JSON", e);
+    }
+}
 
     // Pagamento
 
@@ -227,14 +312,19 @@ public class ViagemService {
         Viagem viagem = obterPorID(idViagem);
         Pagamento pagamento = obterPagamentoPorID(pagamentoId);
 
+        String dataTransferencia = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
         double valorDeTransferencia = (80 * viagem.getValor()) / 100;
 
         // Preparar a requisição para transferência
+
         String json = "{\"value\":" + valorDeTransferencia
                 + ",\"bankAccount\":{\"bank\":{\"code\":\"237\"},\"accountName\":\"" + conta.getNomeBanco()
+                + "\",\"description\":\"" + "Origem: " + viagem.getOrigem() + "Destino: " + viagem.getDestino()
                 + "\",\"ownerName\":\"" + motorista.getNome() + "\",\"cpfCnpj\":\"" + motorista.getCpf()
                 + "\",\"account\":\"" + conta.getNumeroConta() + "\",\"accountDigit\":\"" + conta.getDigitoConta()
                 + "\",\"bankAccountType\":\"CONTA_CORRENTE\",\"agency\":\"" + conta.getAgencia()
+                + "\",\"externalReference\":\"" + dataTransferencia
                 + "\"},\"operationType\":\"TED\"}";
 
         OkHttpClient client = new OkHttpClient();
@@ -256,7 +346,8 @@ public class ViagemService {
             if (response.isSuccessful()) {
                 // Transferência realizada com sucesso
                 pagamento.setStatusTransferenciaMotorista("Transferência realizada.");
-                return pagamento;
+                Pagamento saveStatusTransferenciaMotorista = pagamentoRepository.save(pagamento);
+                return saveStatusTransferenciaMotorista;
             } else {
                 // Erro ao transferir
                 String responseBody = response.body().string();

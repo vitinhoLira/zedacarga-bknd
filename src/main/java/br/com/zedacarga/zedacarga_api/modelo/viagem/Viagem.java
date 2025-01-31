@@ -2,17 +2,18 @@ package br.com.zedacarga.zedacarga_api.modelo.viagem;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.zedacarga.zedacarga_api.modelo.cliente.CartaoCliente;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.Cliente;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.ContaBancariaMotorista;
 import br.com.zedacarga.zedacarga_api.modelo.motorista.Motorista;
+import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemStatusEnum.StatusViagem;
 import br.com.zedacarga.zedacarga_api.util.entity.EntidadeAuditavel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -79,12 +80,15 @@ public class Viagem extends EntidadeAuditavel {
     private String pgtoStatus;
 
     @Column
-    private String statusViagem;
+        @Builder.Default
+        @Enumerated(EnumType.STRING)
+        private StatusViagem statusViagem = StatusViagem.PENDENTE;
 
     @Column
     private String numeroProtocolo;
 
     // Data de Vencimento da Cobrança, com valor padrão
+    @Column
     @Builder.Default
     private String dataVencimentoCobranca = LocalDate.now()
             .plusDays(1)
