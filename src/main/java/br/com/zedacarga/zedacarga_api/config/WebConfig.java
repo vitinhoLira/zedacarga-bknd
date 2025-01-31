@@ -10,15 +10,17 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
-        // Permitir CORS para todas as rotas
+        // Permitir CORS para todas as rotas e permitir origens específicas
         registry.addMapping("/**")
-                .allowedOriginPatterns("*") // Substitui allowedOrigins("*") corretamente
-                .allowedMethods("*") // Permite todos os métodos HTTP
+                .allowedOrigins("*") // Altere para os domínios corretos
+                .allowedMethods("*") // Permite os métodos HTTP
                 .allowedHeaders("*")
-                .allowCredentials(true); // Permite credenciais (cookies, headers auth)
+                .allowedOriginPatterns("*") // Permite qualquer origem, mesmo com credentials
+                .allowCredentials(false);
 
         // Permite CORS para a rota do WebSocket
         registry.addMapping("/ws/**")
-                .allowedOriginPatterns("*"); // Corrige para WebSocket
+                .allowedOrigins("*"); // Permite origens de qualquer domínio para WebSocket
     }
+
 }
