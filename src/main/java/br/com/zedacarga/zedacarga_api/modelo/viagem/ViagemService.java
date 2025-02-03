@@ -120,6 +120,8 @@ public class ViagemService {
         mensagemJson.put("destino", viagem.getDestino());
         mensagemJson.put("valor", viagem.getValor());
         mensagemJson.put("mensagem", "Nova solicitação de viagem");
+        mensagemJson.put("clienteId", cliente.getId());
+        mensagemJson.put("viagemId", viagem.getId());
 
         // Converte para JSON
         ObjectMapper objectMapper = new ObjectMapper();

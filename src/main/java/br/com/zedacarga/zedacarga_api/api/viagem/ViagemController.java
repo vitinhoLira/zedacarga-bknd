@@ -1,6 +1,8 @@
 package br.com.zedacarga.zedacarga_api.api.viagem;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,13 +57,18 @@ public class ViagemController {
     }
 
     @Operation(summary = "Atualiza o status de uma viagem.", description = "Atualiza o status de uma viagem com base no ID da viagem, status desejado, ID do motorista e ID da conta bancária do motorista.")
-@PutMapping("/{idViagem}/status")
+@PutMapping("/{viagemId}/motorista/{motoristaId}/contaBancariaMotorista/{contaBancariaMotoristaId}/status")
 public ResponseEntity<Viagem> atualizarStatusViagem(
         @PathVariable Long idViagem,
-        @RequestParam StatusViagem statusViagem,
-        @RequestParam Long idMotorista,
-        @RequestParam Long idContaBancariaMotorista) {
+        @PathVariable Long idMotorista,
+        @PathVariable Long idContaBancariaMotorista,
+        @RequestBody Map<String, String> statusViagemRequest) {
     try {
+        String status = statusViagemRequest.get("statusViagem");
+        if (status == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        StatusViagem statusViagem = StatusViagem.valueOf(status);
         Viagem viagemAtualizada = viagemService.atualizarStatusViagem(idViagem, statusViagem, idMotorista, idContaBancariaMotorista);
         return ResponseEntity.ok(viagemAtualizada);
     } catch (IllegalArgumentException e) {
@@ -70,6 +77,7 @@ public ResponseEntity<Viagem> atualizarStatusViagem(
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 }
+
 
 
     // pagamento

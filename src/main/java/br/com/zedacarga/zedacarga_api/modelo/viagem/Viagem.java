@@ -43,7 +43,7 @@ public class Viagem extends EntidadeAuditavel {
      private Pagamento pagamento;
 
     // Relacionamento com a Conta Bancária do Motorista
-    @OneToOne
+    @ManyToOne
     @JsonIgnore // Para evitar que o relacionamento seja serializado
     @JoinColumn(name = "conta_bancaria_motorista_id")
     private ContaBancariaMotorista contaBancariaMotorista;
