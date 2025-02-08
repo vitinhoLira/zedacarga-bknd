@@ -54,6 +54,7 @@ public class ViagemService {
     public Viagem save(Viagem viagem, Long clienteId, Long cartaoClienteId, Long idMotorista) {
         CartaoCliente cartao = clienteService.obterCartaoPorId(cartaoClienteId);
         Cliente cliente = clienteService.obterPorID(clienteId);
+        Motorista motorista = motoristaService.obterPorID(idMotorista);
 
         if (cliente == null) {
             throw new IllegalArgumentException("Cliente não encontrado com o ID: " + clienteId);
@@ -98,6 +99,7 @@ public class ViagemService {
                 com.fasterxml.jackson.databind.JsonNode responseJson = mapper.readTree(response.body().string());
                 viagem.setNumeroProtocolo(responseJson.get("id").asText());
                 viagem.setPgtoStatus(responseJson.get("status").asText());
+                viagem.setMotorista(motorista);
 
             } else {
                 throw new RuntimeException(
@@ -178,7 +180,7 @@ public Viagem atualizarStatusViagem(Long viagemId, StatusViagem statusViagem, Lo
 
     switch (statusViagem) {
         case ACEITO:
-            return processarAceitacao(viagem, viagemId, contaBancariaMotoristaId);
+            return processarAceitacao(viagem, motoristaId, contaBancariaMotoristaId);
 
         case RECUSADO:
             return processarRecusa(viagem);
@@ -188,9 +190,9 @@ public Viagem atualizarStatusViagem(Long viagemId, StatusViagem statusViagem, Lo
     }
 }
 
-private Viagem processarAceitacao(Viagem viagem, Long idMotorista, Long idContaBancariaMotorista) {
-    Motorista motorista = motoristaService.obterPorID(idMotorista);
-    ContaBancariaMotorista conta = motoristaService.obterContabancariaPorID(idContaBancariaMotorista);
+private Viagem processarAceitacao(Viagem viagem, Long motoristaId, Long contaBancariaMotoristaId) {
+    Motorista motorista = motoristaService.obterPorID(motoristaId);
+    ContaBancariaMotorista conta = motoristaService.obterContabancariaPorID(contaBancariaMotoristaId);
 
     viagem.setStatusViagem(StatusViagem.ANDAMENTO);
     viagem.setMotorista(motorista);
@@ -204,6 +206,7 @@ private Viagem processarAceitacao(Viagem viagem, Long idMotorista, Long idContaB
 
 private Viagem processarRecusa(Viagem viagem) {
     viagem.setStatusViagem(StatusViagem.RECUSADO);
+    viagem.setMotorista(null);
 
     Viagem viagemAtualizada = repository.save(viagem);
     enviarMensagemWebSocket(viagemAtualizada, viagemAtualizada.getCliente().getId());
