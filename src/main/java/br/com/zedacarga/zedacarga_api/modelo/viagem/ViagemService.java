@@ -169,16 +169,16 @@ public class ViagemService {
     }
 
     @Transactional
-public Viagem atualizarStatusViagem(Long idViagem, StatusViagem statusViagem, Long idMotorista, Long idContaBancariaMotorista) {
-    Viagem viagem = this.obterPorID(idViagem);
+public Viagem atualizarStatusViagem(Long viagemId, StatusViagem statusViagem, Long motoristaId, Long contaBancariaMotoristaId) {
+    Viagem viagem = this.obterPorID(viagemId);
 
     if (viagem == null) {
-        throw new IllegalArgumentException("Viagem não encontrada com o ID: " + idViagem);
+        throw new IllegalArgumentException("Viagem não encontrada com o ID: " + viagemId);
     }
 
     switch (statusViagem) {
         case ACEITO:
-            return processarAceitacao(viagem, idMotorista, idContaBancariaMotorista);
+            return processarAceitacao(viagem, viagemId, contaBancariaMotoristaId);
 
         case RECUSADO:
             return processarRecusa(viagem);
