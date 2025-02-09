@@ -88,15 +88,29 @@ public class ViagemController {
             } catch (IllegalArgumentException e) {
                 logger.error("Status inválido recebido: {}", status, e);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(Map.of("erro", "Status inválido: " + status));
+                        .body(Map.of(
+                                "erro", "Status inválido: " + status,
+                                "detalhe", e.getMessage() // Retorna a mensagem detalhada do erro
+                        ));
+            } catch (Exception e) {
+                logger.error("Erro ao processar o status da viagem", e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of(
+                                "erro", "Erro ao processar o status da viagem.",
+                                "detalhe", e.getMessage() // Retorna a mensagem detalhada do erro
+                        ));
             }
 
         } catch (Exception e) {
             logger.error("Erro inesperado ao atualizar status da viagem", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("erro", "Erro interno no servidor."));
+                    .body(Map.of(
+                            "erro", "Erro interno no servidor.",
+                            "detalhe", e.getMessage() // Retorna a mensagem detalhada do erro
+                    ));
         }
     }
+
     // pagamento
 
     @Operation(summary = "Serviço responsável por pagar uma viagem.", description = "Realize o pagamento de uma viagem adicionando o ID do cliente e do motorista.")
