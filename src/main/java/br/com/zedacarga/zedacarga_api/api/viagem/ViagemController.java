@@ -15,6 +15,7 @@ import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemService;
 import br.com.zedacarga.zedacarga_api.modelo.viagem.ViagemStatusEnum.StatusViagem;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/viagem")
@@ -64,7 +65,7 @@ public class ViagemController {
             @PathVariable Long viagemId,
             @PathVariable Long motoristaId,
             @PathVariable Long contaBancariaMotoristaId,
-            @RequestBody Map<String, String> statusViagemRequest) {
+            @RequestBody @Valid StatusViagemRequest statusViagemRequest) {
 
         Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -72,13 +73,7 @@ public class ViagemController {
             logger.info("Recebida requisição para atualizar status da viagem {} para motorista {} e conta bancária {}",
                     viagemId, motoristaId, contaBancariaMotoristaId);
 
-            if (!statusViagemRequest.containsKey("statusViagem")) {
-                logger.error("Campo 'statusViagem' ausente no corpo da requisição");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(Map.of("erro", "Campo 'statusViagem' é obrigatório."));
-            }
-
-            String status = statusViagemRequest.get("statusViagem").toUpperCase();
+            String status = statusViagemRequest.getStatusViagem().toUpperCase();
 
             try {
                 StatusViagem statusViagem = StatusViagem.valueOf(status);

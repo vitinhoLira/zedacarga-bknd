@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -30,48 +29,6 @@ public class MotoristaService {
 
     @Transactional
     public Motorista save(Motorista motorista) {
-
-        // LocalDate dataDenascimento = motorista.getDataNascimento();
-
-        OkHttpClient client = new OkHttpClient();
-
-        MediaType mediaType = MediaType.parse("application/json");
-
-        // Formatação do JSON para a requisição
-        String json = "{\"name\":\"" + motorista.getNome() + "\",\"email\":\"" + motorista.getEmail()
-                + "\",\"cpfCnpj\":\"" + motorista.getCpf() + "\",\"birthDate\":\""
-                + motorista.getDataNascimento().toString() + "\",\"mobilePhone\":\"" + motorista.getNumeroTelefone()
-                + "\",\"incomeValue\":" + motorista.getRendaMensal() + ",\"address\":\"\",\"addressNumber\":\""
-                + motorista.getNumero() + "\",\"postalCode\":\"" + motorista.getCep() + "\",\"phone\":\""
-                + motorista.getNumeroTelefone() + "\"}";
-
-        // Criação do corpo da requisição
-        RequestBody body = RequestBody.create(json, mediaType);
-        Request request = new Request.Builder()
-                .url("https://sandbox.asaas.com/api/v3/accounts")
-                .post(body)
-                .addHeader("accept", "application/json")
-                .addHeader("content-type", "application/json")
-                .addHeader("access_token",
-                        "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmZmNmE5MTFjLTc0NWUtNDU0OC04YTM2LTI2ZDM2NWY0MjFhZDo6JGFhY2hfMTk0OWRiZWItNTViNy00MjIzLTg1ZTItY2JlMDc5ZDU0YmVj")
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                ObjectMapper mapper = new ObjectMapper();
-                com.fasterxml.jackson.databind.JsonNode responseJson = mapper.readTree(response.body().string());
-                motorista.setAsaasId(responseJson.get("id").asText());
-                motorista.setApiKeyAsaas(responseJson.get("apiKey").asText());
-                motorista.setWalletId(responseJson.get("walletId").asText());
-                motorista.setEstado(responseJson.get("state").asText());
-            } else {
-                throw new RuntimeException(
-                        "Erro ao cadastrar motorista no Asaas: " + response.code() + " - " + response.body().string());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao se comunicar com a API do Asaas", e);
-        }
 
         motorista.setHabilitado(Boolean.TRUE);
         motorista.setVersao(1L);
@@ -98,7 +55,6 @@ public class MotoristaService {
         motorista.setNumeroTelefone(motoristaAlterado.getNumeroTelefone());
         motorista.setCpf(motoristaAlterado.getCpf());
         motorista.setNumeroCnh(motoristaAlterado.getNumeroCnh());
-        motorista.setRendaMensal(motoristaAlterado.getRendaMensal());
 
         motorista.setVersao(motorista.getVersao() + 1);
         repository.save(motorista);

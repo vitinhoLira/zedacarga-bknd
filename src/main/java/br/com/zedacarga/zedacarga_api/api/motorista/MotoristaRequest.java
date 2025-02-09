@@ -47,11 +47,8 @@ public class MotoristaRequest {
 
     private String complemento;
 
-    private double rendaMensal;
-    
-
     public Motorista build() {
-        
+
         return Motorista.builder()
                 .nome(nome)
                 .email(email)
@@ -66,7 +63,6 @@ public class MotoristaRequest {
                 .bairro(bairro)
                 .cep(cep)
                 .complemento(complemento)
-                .rendaMensal(rendaMensal)
                 .build();
     }
 }

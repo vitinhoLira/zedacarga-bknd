@@ -46,9 +46,6 @@ public class Motorista extends EntidadeAuditavel {
     private String email;
 
     @Column
-    private double rendaMensal;
-
-    @Column
     private LocalDate dataNascimento;
 
     @Column
@@ -83,14 +80,5 @@ public class Motorista extends EntidadeAuditavel {
 
     @Column
     private String complemento;
-
-    @Column
-    private String apiKeyAsaas;
-
-    @Column
-    private String walletId;
-
-    @Column
-    private String asaasId;
 
 }
