@@ -58,44 +58,45 @@ public class ViagemController {
         return ResponseEntity.ok().build();
     }
 
-   @Operation(summary = "Atualiza o status de uma viagem.", description = "Atualiza o status de uma viagem com base no ID da viagem, status desejado, ID do motorista e ID da conta bancária do motorista.")
-@PutMapping("/{viagemId}/motorista/{motoristaId}/contaBancariaMotorista/{contaBancariaMotoristaId}/status")
-public ResponseEntity<?> atualizarStatusViagem(
-        @PathVariable Long viagemId,
-        @PathVariable Long motoristaId,
-        @PathVariable Long contaBancariaMotoristaId,
-        @RequestBody Map<String, String> statusViagemRequest) {
-    
-    Logger logger = LoggerFactory.getLogger(getClass());
+    @Operation(summary = "Atualiza o status de uma viagem.", description = "Atualiza o status de uma viagem com base no ID da viagem, status desejado, ID do motorista e ID da conta bancária do motorista.")
+    @PutMapping("/{viagemId}/motorista/{motoristaId}/contaBancariaMotorista/{contaBancariaMotoristaId}/status")
+    public ResponseEntity<?> atualizarStatusViagem(
+            @PathVariable Long viagemId,
+            @PathVariable Long motoristaId,
+            @PathVariable Long contaBancariaMotoristaId,
+            @RequestBody Map<String, String> statusViagemRequest) {
 
-    try {
-        logger.info("Recebida requisição para atualizar status da viagem {} para motorista {} e conta bancária {}",
-                viagemId, motoristaId, contaBancariaMotoristaId);
-
-        if (!statusViagemRequest.containsKey("statusViagem")) {
-            logger.error("Campo 'statusViagem' ausente no corpo da requisição");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("erro", "Campo 'statusViagem' é obrigatório."));
-        }
-
-        String status = statusViagemRequest.get("statusViagem").toUpperCase();
+        Logger logger = LoggerFactory.getLogger(getClass());
 
         try {
-            StatusViagem statusViagem = StatusViagem.valueOf(status);
-            Viagem viagemAtualizada = viagemService.atualizarStatusViagem(viagemId, statusViagem, motoristaId, contaBancariaMotoristaId);
-            return ResponseEntity.ok(viagemAtualizada);
-        } catch (IllegalArgumentException e) {
-            logger.error("Status inválido recebido: {}", status, e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("erro", "Status inválido: " + status));
-        }
+            logger.info("Recebida requisição para atualizar status da viagem {} para motorista {} e conta bancária {}",
+                    viagemId, motoristaId, contaBancariaMotoristaId);
 
-    } catch (Exception e) {
-        logger.error("Erro inesperado ao atualizar status da viagem", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("erro", "Erro interno no servidor."));
+            if (!statusViagemRequest.containsKey("statusViagem")) {
+                logger.error("Campo 'statusViagem' ausente no corpo da requisição");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("erro", "Campo 'statusViagem' é obrigatório."));
+            }
+
+            String status = statusViagemRequest.get("statusViagem").toUpperCase();
+
+            try {
+                StatusViagem statusViagem = StatusViagem.valueOf(status);
+                Viagem viagemAtualizada = viagemService.atualizarStatusViagem(viagemId, statusViagem, motoristaId,
+                        contaBancariaMotoristaId);
+                return ResponseEntity.ok(viagemAtualizada);
+            } catch (IllegalArgumentException e) {
+                logger.error("Status inválido recebido: {}", status, e);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("erro", "Status inválido: " + status));
+            }
+
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao atualizar status da viagem", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("erro", "Erro interno no servidor."));
+        }
     }
-}
     // pagamento
 
     @Operation(summary = "Serviço responsável por pagar uma viagem.", description = "Realize o pagamento de uma viagem adicionando o ID do cliente e do motorista.")

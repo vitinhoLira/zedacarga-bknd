@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.zedacarga.zedacarga_api.api.websocket.ClienteWebSocket;
 import br.com.zedacarga.zedacarga_api.api.websocket.MotoristaWebSocket;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.CartaoCliente;
 import br.com.zedacarga.zedacarga_api.modelo.cliente.Cliente;
@@ -44,6 +45,9 @@ public class ViagemService {
 
     @Autowired
     private MotoristaWebSocket motoristaWebSocket;
+
+    @Autowired
+    private ClienteWebSocket clienteWebSocket;
 
     @Autowired
     private MotoristaService motoristaService;
@@ -171,60 +175,85 @@ public class ViagemService {
     }
 
     @Transactional
-public Viagem atualizarStatusViagem(Long viagemId, StatusViagem statusViagem, Long motoristaId, Long contaBancariaMotoristaId) {
-    Viagem viagem = this.obterPorID(viagemId);
+    public Viagem atualizarStatusViagem(Long viagemId, StatusViagem statusViagem, Long motoristaId,
+            Long contaBancariaMotoristaId) {
+        Viagem viagem = this.obterPorID(viagemId);
 
-    if (viagem == null) {
-        throw new IllegalArgumentException("Viagem não encontrada com o ID: " + viagemId);
+        if (viagem == null) {
+            throw new IllegalArgumentException("Viagem não encontrada com o ID: " + viagemId);
+        }
+
+        switch (statusViagem) {
+            case ACEITO:
+                return processarAceitacao(viagem, motoristaId, contaBancariaMotoristaId);
+
+            case RECUSADO:
+                return processarRecusa(viagem);
+
+            case CONCLUIDO:
+                return processarConclusao(viagem);
+
+            default:
+                throw new IllegalArgumentException("Status inválido para essa operação.");
+        }
     }
 
-    switch (statusViagem) {
-        case ACEITO:
-            return processarAceitacao(viagem, motoristaId, contaBancariaMotoristaId);
+    private Viagem processarAceitacao(Viagem viagem, Long motoristaId, Long contaBancariaMotoristaId) {
+        Motorista motorista = motoristaService.obterPorID(motoristaId);
+        ContaBancariaMotorista conta = motoristaService.obterContabancariaPorID(contaBancariaMotoristaId);
 
-        case RECUSADO:
-            return processarRecusa(viagem);
+        viagem.setStatusViagem(StatusViagem.ANDAMENTO);
+        viagem.setMotorista(motorista);
+        viagem.setContaBancariaMotorista(conta);
 
-        default:
-            throw new IllegalArgumentException("Status inválido para essa operação.");
+        Viagem viagemAtualizada = repository.save(viagem);
+        enviarMensagemWebSocketMotorista(viagemAtualizada, viagemAtualizada.getCliente().getId());
+
+        return viagemAtualizada;
     }
-}
 
-private Viagem processarAceitacao(Viagem viagem, Long motoristaId, Long contaBancariaMotoristaId) {
-    Motorista motorista = motoristaService.obterPorID(motoristaId);
-    ContaBancariaMotorista conta = motoristaService.obterContabancariaPorID(contaBancariaMotoristaId);
+    private Viagem processarRecusa(Viagem viagem) {
+        viagem.setStatusViagem(StatusViagem.RECUSADO);
+        viagem.setMotorista(null);
 
-    viagem.setStatusViagem(StatusViagem.ANDAMENTO);
-    viagem.setMotorista(motorista);
-    viagem.setContaBancariaMotorista(conta);
+        Viagem viagemAtualizada = repository.save(viagem);
+        enviarMensagemWebSocketMotorista(viagemAtualizada, viagemAtualizada.getCliente().getId());
 
-    Viagem viagemAtualizada = repository.save(viagem);
-    enviarMensagemWebSocket(viagemAtualizada, viagemAtualizada.getCliente().getId());
-
-    return viagemAtualizada;
-}
-
-private Viagem processarRecusa(Viagem viagem) {
-    viagem.setStatusViagem(StatusViagem.RECUSADO);
-    viagem.setMotorista(null);
-
-    Viagem viagemAtualizada = repository.save(viagem);
-    enviarMensagemWebSocket(viagemAtualizada, viagemAtualizada.getCliente().getId());
-
-    return viagemAtualizada;
-}
-
-private void enviarMensagemWebSocket(Viagem viagem, Long idCliente) {
-    Map<String, Object> mensagemJson = new HashMap<>();
-    mensagemJson.put("status", viagem.getStatusViagem());
-
-    try {
-        String mensagemJsonString = new ObjectMapper().writeValueAsString(mensagemJson);
-        motoristaWebSocket.enviarMensagemParaMotorista(idCliente, mensagemJsonString);
-    } catch (Exception e) {
-        throw new RuntimeException("Erro ao converter mensagem para JSON", e);
+        return viagemAtualizada;
     }
-}
+
+    private Viagem processarConclusao(Viagem viagem) {
+        viagem.setStatusViagem(StatusViagem.CONCLUIDO);
+
+        Viagem viagemAtualizada = repository.save(viagem);
+        enviarMensagemWebSocketCliente(viagemAtualizada, viagemAtualizada.getCliente().getId());
+
+        return viagemAtualizada;
+    }
+
+    private void enviarMensagemWebSocketMotorista(Viagem viagem, Long idCliente) {
+        Map<String, Object> mensagemJson = new HashMap<>();
+        mensagemJson.put("status", viagem.getStatusViagem());
+
+        try {
+            String mensagemJsonString = new ObjectMapper().writeValueAsString(mensagemJson);
+            motoristaWebSocket.enviarMensagemParaMotorista(idCliente, mensagemJsonString);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao converter mensagem para JSON", e);
+        }
+    }
+
+    private void enviarMensagemWebSocketCliente(Viagem viagem, Long idCliente) {
+        Map<String, Object> mensagemJson = new HashMap<>();
+        mensagemJson.put("status", viagem.getStatusViagem());
+
+        try {
+            String mensagemJsonString = new ObjectMapper().writeValueAsString(mensagemJson);
+            clienteWebSocket.enviarMensagemParaCliente(idCliente, mensagemJsonString);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao converter mensagem para JSON", e);
+        }
+    }
 
     // Pagamento
 
