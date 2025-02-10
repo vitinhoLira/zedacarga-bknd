@@ -4,6 +4,19 @@ spring:
     username: postgres
     password: zedacarga
     driver-class-name: org.postgresql.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: zedacargaltda@gmail.com
+    password: xssp hsrz fcnd fxur
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
 
   jpa:
     hibernate:
