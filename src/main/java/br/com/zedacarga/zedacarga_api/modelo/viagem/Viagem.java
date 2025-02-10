@@ -36,11 +36,11 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor
 public class Viagem extends EntidadeAuditavel {
 
-     // Relacionamento com a Conta Bancária do Motorista
-     @OneToOne
-     @JsonIgnore // Para evitar que o relacionamento seja serializado
-     @JoinColumn(name = "pagamento_viagem_id")
-     private Pagamento pagamento;
+    // Relacionamento com a Conta Bancária do Motorista
+    @OneToOne
+    @JsonIgnore // Para evitar que o relacionamento seja serializado
+    @JoinColumn(name = "pagamento_viagem_id")
+    private Pagamento pagamento;
 
     // Relacionamento com a Conta Bancária do Motorista
     @ManyToOne
@@ -66,13 +66,13 @@ public class Viagem extends EntidadeAuditavel {
     private Motorista motorista;
 
     // Detalhes da Viagem
-    @Column
+    @Column(nullable = false, length = 100)
     private String origem;
 
-    @Column
+    @Column(nullable = false, length = 100)
     private String destino;
 
-    @Column
+    @Column(nullable = false, precision = 12)
     private double valor;
 
     // Status do pagamento
@@ -80,9 +80,9 @@ public class Viagem extends EntidadeAuditavel {
     private String pgtoStatus;
 
     @Column
-        @Builder.Default
-        @Enumerated(EnumType.STRING)
-        private StatusViagem statusViagem = StatusViagem.PENDENTE;
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private StatusViagem statusViagem = StatusViagem.PENDENTE;
 
     @Column
     private String numeroProtocolo;
@@ -93,7 +93,7 @@ public class Viagem extends EntidadeAuditavel {
     private String dataVencimentoCobranca = LocalDate.now()
             .plusDays(1)
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    
+
     @Column
     private String viagemComprovante;
 }

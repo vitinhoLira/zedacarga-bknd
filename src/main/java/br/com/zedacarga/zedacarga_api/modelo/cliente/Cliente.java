@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Cliente")
+@Table(name = "cliente")
 @SQLRestriction("habilitado = true")
 @Builder
 @Getter
@@ -38,31 +38,31 @@ public class Cliente extends EntidadeAuditavel {
     @JsonIgnore // Ignora a serialização recursiva de viagens dentro de cliente
     private List<Viagem> viagens;
 
-    @Column
+    @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column
+    @Column(nullable = false, length = 10)
     private LocalDate dataNascimento;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String telefone;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String cpf;
 
-    @Column
+    @Column(nullable = false)
     private String foto;
 
     @Column
     private String asaasId;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String cep;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String residenciaNumero;
 
 }

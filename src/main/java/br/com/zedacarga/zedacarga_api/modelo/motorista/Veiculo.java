@@ -29,22 +29,22 @@ public class Veiculo extends EntidadeAuditavel {
     @JsonIgnore
     private Motorista motorista;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String placa;
 
-    @Column
+    @Column(nullable = false, length = 30)
     private String modelo;
 
-    @Column
+    @Column(nullable = false, length = 11)
     private String renavam;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String cor;
 
-    @Column
+    @Column(nullable = false)
     private String fotoVeiculo;
 
-    @Column
+    @Column(nullable = false, length = 10)
     private String ano;
 
 }

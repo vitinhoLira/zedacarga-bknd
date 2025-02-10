@@ -30,35 +30,31 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @Operation(summary = "Serviço responsável por salvar um cliente no sistema.", 
-    description = "Insira um cliente no sistema.")
+    @Operation(summary = "Serviço responsável por salvar um cliente no sistema.", description = "Insira um cliente no sistema.")
 
-    //cliente
+    // cliente
 
     @PostMapping
-    public ResponseEntity<Cliente> save(@RequestBody ClienteRequest request) {
+    public ResponseEntity<Cliente> save(@RequestBody @Valid ClienteRequest request) {
         Cliente cliente = clienteService.save(request.build());
         return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Serviço responsável por obter todos clientes do sistema.", 
-    description = "Obtenha todos os clientes registrados do sistema.")
+    @Operation(summary = "Serviço responsável por obter todos clientes do sistema.", description = "Obtenha todos os clientes registrados do sistema.")
 
     @GetMapping
     public List<Cliente> listarTodos() {
         return clienteService.listarTodos();
     }
 
-    @Operation(summary = "Serviço responsável por obter um cliente do sistema.", 
-    description = "Obtenha um cliente do sistema inserindo o 'id'.")
+    @Operation(summary = "Serviço responsável por obter um cliente do sistema.", description = "Obtenha um cliente do sistema inserindo o 'id'.")
 
     @GetMapping("/{id}")
     public Cliente obterPorID(@PathVariable Long id) {
         return clienteService.obterPorID(id);
     }
 
-    @Operation(summary = "Serviço responsável por editar um cliente do sistema.", 
-    description = "Edite um cliente do sistema inserindo o 'id'.")
+    @Operation(summary = "Serviço responsável por editar um cliente do sistema.", description = "Edite um cliente do sistema inserindo o 'id'.")
 
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> update(@PathVariable("id") Long id, @RequestBody ClienteRequest request) {
@@ -66,8 +62,7 @@ public class ClienteController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Serviço responsável por excluir um cliente do sistema.", 
-    description = "Exclua um cliente do sistema inserindo o 'id'.")
+    @Operation(summary = "Serviço responsável por excluir um cliente do sistema.", description = "Exclua um cliente do sistema inserindo o 'id'.")
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -75,10 +70,9 @@ public class ClienteController {
         return ResponseEntity.ok().build();
     }
 
-    //CartaoCliente
+    // CartaoCliente
 
-    @Operation(summary = "Serviço responsável por obter um cartão por ID.", 
-    description = "Obtenha os detalhes de um cartão com base no ID.")
+    @Operation(summary = "Serviço responsável por obter um cartão por ID.", description = "Obtenha os detalhes de um cartão com base no ID.")
     @GetMapping("/cartao/{cartaoId}")
     public ResponseEntity<CartaoCliente> obterCartaoPorId(@PathVariable("cartaoId") Long cartaoId) {
 
@@ -86,44 +80,39 @@ public class ClienteController {
         return ResponseEntity.ok(cartao);
     }
 
-    @Operation(summary = "Serviço responsável por listar todos os cartões de um cliente.", 
-description = "Lista todos os cartões cadastrados para um cliente específico.")
-@GetMapping("/cartoes/{clienteId}")
-public ResponseEntity<List<CartaoCliente>> listarCartoesPorCliente(@PathVariable("clienteId") Long clienteId) {
-    List<CartaoCliente> cartoes = clienteService.listarCartoesPorCliente(clienteId);
-    return ResponseEntity.ok(cartoes);
-}
+    @Operation(summary = "Serviço responsável por listar todos os cartões de um cliente.", description = "Lista todos os cartões cadastrados para um cliente específico.")
+    @GetMapping("/cartoes/{clienteId}")
+    public ResponseEntity<List<CartaoCliente>> listarCartoesPorCliente(@PathVariable("clienteId") Long clienteId) {
+        List<CartaoCliente> cartoes = clienteService.listarCartoesPorCliente(clienteId);
+        return ResponseEntity.ok(cartoes);
+    }
 
-    @Operation(summary = "Serviço responsável por salvar um cartão no sistema.", 
-    description = "Insira um cartão no sistema.")
-
+    @Operation(summary = "Serviço responsável por salvar um cartão no sistema.", description = "Insira um cartão no sistema.")
     @PostMapping("/cartao/{clienteId}")
-    public ResponseEntity<CartaoCliente> adicionarCartaoCliente(@PathVariable("clienteId") Long clienteId, @RequestBody @Valid CartaoClienteRequest request) {
+    public ResponseEntity<CartaoCliente> adicionarCartaoCliente(@PathVariable("clienteId") Long clienteId,
+            @RequestBody @Valid CartaoClienteRequest request) {
 
         CartaoCliente cartao = clienteService.adicionarCartaoCliente(clienteId, request.build());
         return new ResponseEntity<CartaoCliente>(cartao, HttpStatus.CREATED);
     }
 
-
-    @Operation(summary = "Serviço responsável por editar um cartão no sistema.", 
-    description = "Edite um cartão no sistema.")
+    @Operation(summary = "Serviço responsável por editar um cartão no sistema.", description = "Edite um cartão no sistema.")
 
     @PutMapping("/cartao/{cartaoId}")
-    public ResponseEntity<CartaoCliente> atualizarCartaoCliente(@PathVariable("cartaoId") Long cartaoId, @RequestBody CartaoClienteRequest request) {
+    public ResponseEntity<CartaoCliente> atualizarCartaoCliente(@PathVariable("cartaoId") Long cartaoId,
+            @RequestBody CartaoClienteRequest request) {
 
         CartaoCliente cartao = clienteService.atualizarCartaoCliente(cartaoId, request.build());
         return new ResponseEntity<CartaoCliente>(cartao, HttpStatus.OK);
     }
 
-    @Operation(summary = "Serviço responsável por excluir um cartão no sistema.", 
-    description = "Delete um cartão no sistema.")
-    
+    @Operation(summary = "Serviço responsável por excluir um cartão no sistema.", description = "Delete um cartão no sistema.")
+
     @DeleteMapping("/cartao/{cartaoId}")
     public ResponseEntity<Void> removerCartaoCliente(@PathVariable("cartaoId") Long cartaoId) {
 
         clienteService.removerCartaoCliente(cartaoId);
         return ResponseEntity.noContent().build();
     }
-
 
 }

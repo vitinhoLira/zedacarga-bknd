@@ -27,25 +27,24 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor
 public class ContaBancariaMotorista extends EntidadeAuditavel {
 
-
     @OneToOne(mappedBy = "contaBancariaMotorista")
     @JsonIgnore
-    private Viagem viagem;  // Relacionamento inverso;
-    
+    private Viagem viagem; // Relacionamento inverso;
+
     @JsonIgnore
     @ManyToOne
     private Motorista motorista;
 
-    @Column
+    @Column(nullable = false, length = 25)
     private String nomeBanco;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String numeroConta;
 
-    @Column
+    @Column(nullable = false, length = 2)
     private String digitoConta;
 
-    @Column
+    @Column(nullable = false, length = 4)
     private String agencia;
 
 }

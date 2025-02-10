@@ -39,46 +39,46 @@ public class Motorista extends EntidadeAuditavel {
     @OneToOne
     private Veiculo veiculo;
 
-    @Column
+    @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = false, length = 10)
     private LocalDate dataNascimento;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String numeroTelefone;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String cpf;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String numeroCnh;
 
-    @Column
+    @Column(nullable = false)
     private String foto;
 
-    @Column
+    @Column(nullable = false, length = 100)
     private String endereco;
 
-    @Column
+    @Column(nullable = false, length = 30)
     private String cidade;
 
-    @Column
+    @Column(nullable = false, length = 30)
     private String estado;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String numero;
 
-    @Column
+    @Column(nullable = false, length = 30)
     private String bairro;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String cep;
 
-    @Column
+    @Column(nullable = true, length = 60)
     private String complemento;
 
 }

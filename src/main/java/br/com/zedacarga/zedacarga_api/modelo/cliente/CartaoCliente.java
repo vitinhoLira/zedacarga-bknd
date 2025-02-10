@@ -38,16 +38,16 @@ public class CartaoCliente extends EntidadeAuditavel {
     @JsonIgnore
     private Cliente cliente;
 
-    @Column
+    @Column(nullable = false, length = 19)
     private String numeroCartao;
 
-    @Column
+    @Column(nullable = false, length = 11)
     private String tipoCartao;
 
-    @Column
+    @Column(nullable = false, length = 7)
     private YearMonth dataVencimento;
 
-    @Column
+    @Column(nullable = false, length = 3)
     private String cvv;
 
 }
