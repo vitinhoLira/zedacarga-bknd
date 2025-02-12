@@ -30,8 +30,6 @@ public class ClienteRequest {
     private String nome;
 
     @NotNull(message = "A Data é de preenchimento obrigatório")
-    @NotEmpty(message = "A Data é de preenchimento obrigatório")
-    @Length(max = 10, message = "O Nome deverá ter no máximo {max} caracteres")
     @JsonFormat(pattern = "dd/MM/yyyy")
     @Schema(example = "08/08/1996", description = "Data de nascimento.")
     private LocalDate dataNascimento;
@@ -45,8 +43,8 @@ public class ClienteRequest {
     @Length(min = 8, max = 20, message = "O campo Fone tem que ter entre {min} e {max} caracteres")
     private String telefone;
 
-    @NotNull(message = "A Data é de preenchimento obrigatório")
-    @NotEmpty(message = "A Data é de preenchimento obrigatório")
+    @NotNull(message = "O Foto é de preenchimento obrigatório")
+    @NotEmpty(message = "O Foto é de preenchimento obrigatório")
     private String foto;
 
     @Email(message = "O Email inserido não possui as caracteriscas de um email válido")

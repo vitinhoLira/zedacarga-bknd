@@ -34,12 +34,8 @@ public class CartaoClienteRequest {
         private String tipoCartao;
 
         @NotNull(message = "A Data de Validade do Cartão é de preenchimento obrigatório")
-        @NotEmpty(message = "A Data de Validade do Cartão é de preenchimento obrigatório")
-        @Length(max = 7, message = "O Número deverá ter no máximo {max} caracteres")
         @JsonFormat(pattern = "MM/yyyy")
-        @Schema(example = "02/2025", description = "Data de vencimento do cartão no formato MM/yyyy") // Define o
-                                                                                                      // formato no
-                                                                                                      // Swagger
+        @Schema(example = "02/2025", description = "Data de vencimento do cartão no formato MM/yyyy") // Swagger
         private YearMonth dataVencimento;
 
         @NotNull(message = "O Código de Segurança é de preenchimento obrigatório")

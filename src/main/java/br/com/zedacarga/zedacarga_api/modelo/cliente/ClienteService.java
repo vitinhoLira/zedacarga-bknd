@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -46,7 +47,7 @@ public class ClienteService {
                 .addHeader("accept", "application/json")
                 .addHeader("content-type", "application/json")
                 .addHeader("access_token",
-                        "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmZmNmE5MTFjLTc0NWUtNDU0OC04YTM2LTI2ZDM2NWY0MjFhZDo6JGFhY2hfMTk0OWRiZWItNTViNy00MjIzLTg1ZTItY2JlMDc5ZDU0YmVj") // Substitua
+                        "$aact_MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmFkZTA5OTJhLWI3MzMtNDQwNy1hY2MwLTZhYjFkZTgyNTM2Yzo6JGFhY2hfNDg3NmM0M2UtYTU0MS00OGVlLWExZmQtZGRjMTI4YzI0NTRl") // Substitua
                                                                                                                                                                                           // com
                                                                                                                                                                                           // o
                                                                                                                                                                                           // token
@@ -97,8 +98,9 @@ public class ClienteService {
     }
 
     @Transactional
-    public void update(Long id, Cliente clienteAlterado) {
-        Cliente cliente = repository.findById(id).get();
+    public Cliente update(Long id, Cliente clienteAlterado) {
+        Cliente cliente = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o id: " + id));
         cliente.setNome(clienteAlterado.getNome());
         cliente.setDataNascimento(clienteAlterado.getDataNascimento());
         cliente.setTelefone(clienteAlterado.getTelefone());
@@ -110,6 +112,7 @@ public class ClienteService {
 
         cliente.setVersao(cliente.getVersao() + 1);
         repository.save(cliente);
+        return cliente;
     }
 
     @Transactional

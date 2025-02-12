@@ -46,10 +46,17 @@ public class MotoristaService {
         motorista.setNome(motoristaAlterado.getNome());
         motorista.setEmail(motoristaAlterado.getEmail());
         motorista.setDataNascimento(motoristaAlterado.getDataNascimento());
-        motorista.setCpf(motoristaAlterado.getCpf());
         motorista.setNumeroTelefone(motoristaAlterado.getNumeroTelefone());
         motorista.setCpf(motoristaAlterado.getCpf());
         motorista.setNumeroCnh(motoristaAlterado.getNumeroCnh());
+        motorista.setFoto(motoristaAlterado.getFoto());
+        motorista.setEndereco(motoristaAlterado.getEndereco());
+        motorista.setCidade(motoristaAlterado.getCidade());
+        motorista.setEstado(motoristaAlterado.getEstado());
+        motorista.setNumero(motoristaAlterado.getNumero());
+        motorista.setBairro(motoristaAlterado.getBairro());
+        motorista.setCep(motoristaAlterado.getCep());
+        motorista.setComplemento(motoristaAlterado.getComplemento());
 
         motorista.setVersao(motorista.getVersao() + 1);
         repository.save(motorista);

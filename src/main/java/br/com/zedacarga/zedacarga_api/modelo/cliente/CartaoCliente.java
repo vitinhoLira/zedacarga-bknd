@@ -44,7 +44,7 @@ public class CartaoCliente extends EntidadeAuditavel {
     @Column(nullable = false, length = 11)
     private String tipoCartao;
 
-    @Column(nullable = false, length = 7)
+    @Column(nullable = false)
     private YearMonth dataVencimento;
 
     @Column(nullable = false, length = 3)

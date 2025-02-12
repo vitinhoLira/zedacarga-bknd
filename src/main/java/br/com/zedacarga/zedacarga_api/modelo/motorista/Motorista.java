@@ -45,7 +45,7 @@ public class Motorista extends EntidadeAuditavel {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false)
     private LocalDate dataNascimento;
 
     @Column(nullable = false, length = 20)
@@ -57,7 +57,7 @@ public class Motorista extends EntidadeAuditavel {
     @Column(nullable = false, unique = true)
     private String numeroCnh;
 
-    @Column(nullable = false)
+    @Column
     private String foto;
 
     @Column(nullable = false, length = 100)

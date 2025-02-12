@@ -2,9 +2,7 @@ package br.com.zedacarga.zedacarga_api.modelo.cliente;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.hibernate.annotations.SQLRestriction;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.zedacarga.zedacarga_api.modelo.viagem.Viagem;
@@ -41,7 +39,7 @@ public class Cliente extends EntidadeAuditavel {
     @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false)
     private LocalDate dataNascimento;
 
     @Column(nullable = false, length = 20)
@@ -53,7 +51,7 @@ public class Cliente extends EntidadeAuditavel {
     @Column(unique = true, nullable = false)
     private String cpf;
 
-    @Column(nullable = false)
+    @Column
     private String foto;
 
     @Column
