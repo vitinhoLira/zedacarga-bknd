@@ -110,7 +110,8 @@ public class ViagemController {
 
     @Operation(summary = "Serviço responsável por pagar uma viagem.", description = "Realize o pagamento de uma viagem adicionando o ID do cliente e do motorista.")
     @PostMapping("/{viagemId}/conta/{contaId}/pagamento")
-    public ResponseEntity<Pagamento> pagar(@RequestBody PagamentoRequest request, Long viagemId, Long contaId) {
+    public ResponseEntity<Pagamento> pagar(@RequestBody PagamentoRequest request, @PathVariable Long viagemId,
+            @PathVariable Long contaId) {
         Pagamento pagamento = viagemService.pagar(request.build(), viagemId, contaId);
         return new ResponseEntity<>(pagamento, HttpStatus.CREATED);
     }

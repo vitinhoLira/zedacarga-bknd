@@ -127,7 +127,7 @@ public class ViagemService {
         mensagemJson.put("valor", viagem.getValor());
         mensagemJson.put("mensagem", "Nova solicitação de viagem");
         mensagemJson.put("clienteId", cliente.getId());
-        mensagemJson.put("viagemId", viagem.getId());
+        mensagemJson.put("viagemId", viagemSalva.getId());
 
         // Converte para JSON
         ObjectMapper objectMapper = new ObjectMapper();
@@ -191,6 +191,7 @@ public class ViagemService {
                 return processarRecusa(viagem);
 
             case CONCLUIDO:
+
                 return processarConclusao(viagem);
 
             default:
@@ -206,6 +207,8 @@ public class ViagemService {
         viagem.setMotorista(motorista);
         viagem.setContaBancariaMotorista(conta);
 
+        viagem.setVersao(viagem.getVersao() + 1);
+
         Viagem viagemAtualizada = repository.save(viagem);
         enviarMensagemWebSocketMotorista(viagemAtualizada, viagemAtualizada.getCliente().getId());
 
@@ -213,20 +216,46 @@ public class ViagemService {
     }
 
     private Viagem processarRecusa(Viagem viagem) {
+
         viagem.setStatusViagem(StatusViagem.RECUSADO);
+
         viagem.setMotorista(null);
 
+        viagem.setVersao(viagem.getVersao() + 1);
+
         Viagem viagemAtualizada = repository.save(viagem);
+
         enviarMensagemWebSocketMotorista(viagemAtualizada, viagemAtualizada.getCliente().getId());
 
         return viagemAtualizada;
     }
 
     private Viagem processarConclusao(Viagem viagem) {
+
         viagem.setStatusViagem(StatusViagem.CONCLUIDO);
 
+        viagem.setVersao(viagem.getVersao() + 1);
+
         Viagem viagemAtualizada = repository.save(viagem);
+
         enviarMensagemWebSocketCliente(viagemAtualizada, viagemAtualizada.getCliente().getId());
+
+        Map<String, Object> mensagemJson = new HashMap<>();
+
+        Long pagtoId = viagemAtualizada.getPagamento().getId();
+
+        mensagemJson.put("pagamentoId", pagtoId);
+
+        // Converte para JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String mensagemJsonString;
+        try {
+            mensagemJsonString = objectMapper.writeValueAsString(mensagemJson);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao converter mensagem para JSON", e);
+        }
+
+        motoristaWebSocket.enviarMensagemParaMotorista(viagemAtualizada.getMotorista().getId(), mensagemJsonString);
 
         return viagemAtualizada;
     }
@@ -320,7 +349,10 @@ public class ViagemService {
                 viagem.setPgtoStatus("Done");
                 pagamento.setViagem(viagem);
                 pagamento.setHabilitado(Boolean.TRUE);
-                pagamentoRepository.save(pagamento);
+                Pagamento pagamentoSalvo = pagamentoRepository.save(pagamento);
+                viagem.setPagamento(pagamentoSalvo);
+                viagem.setVersao(viagem.getVersao() + 1);
+                repository.save(viagem);
 
             } else {
                 // Lançando exceção caso a resposta não seja bem-sucedida
@@ -331,9 +363,6 @@ public class ViagemService {
             // Tratamento de exceções
             throw new RuntimeException("Erro ao se comunicar com a API do Asaas", e);
         }
-
-        viagem.setPagamento(pagamento);
-        repository.save(viagem);
 
         return pagamento;
     }

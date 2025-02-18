@@ -95,6 +95,7 @@ public class MotoristaService {
 
         listaContasMotorista.add(conta);
         motorista.setContas(listaContasMotorista);
+        motorista.setVersao(motorista.getVersao() + 1);
         repository.save(motorista);
 
         return conta;
